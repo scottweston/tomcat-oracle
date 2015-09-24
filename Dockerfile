@@ -1,4 +1,4 @@
-FROM scottweston/java-oracle:6
+FROM scottweston/java-oracle:7
 MAINTAINER Scott Weston <scott@hronboard.me>
 
 ENV CATALINA_HOME /usr/local/tomcat
