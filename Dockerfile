@@ -1,13 +1,10 @@
-FROM scottweston/java-oracle:7
+FROM scottweston/java-oracle:8
 MAINTAINER Scott Weston <scott@hronboard.me>
 
 ENV CATALINA_HOME /usr/local/tomcat
 ENV PATH $CATALINA_HOME/bin:$PATH
 RUN mkdir -p "$CATALINA_HOME"
 WORKDIR $CATALINA_HOME
-
-# require curl later
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes curl
 
 # see https://www.apache.org/dist/tomcat/tomcat-8/KEYS
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
@@ -25,13 +22,13 @@ RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
   F3A04C595DB5B6A5F1ECA43E3B7BBB100D811BBE \
   F7DA48BB64BCB84ECBA7EE6935CD23C10D498E23
 
-ENV TOMCAT_MAJOR 7
-ENV TOMCAT_VERSION 7.0.64
+ENV TOMCAT_MAJOR 8
+ENV TOMCAT_VERSION 8.0.30
 ENV TOMCAT_TGZ_URL https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
 
 RUN set -x \
-  && curl -fSL "$TOMCAT_TGZ_URL" -o tomcat.tar.gz \
-  && curl -fSL "$TOMCAT_TGZ_URL.asc" -o tomcat.tar.gz.asc \
+  && wget "$TOMCAT_TGZ_URL" -O tomcat.tar.gz \
+  && wget "$TOMCAT_TGZ_URL.asc" -O tomcat.tar.gz.asc \
   && gpg --verify tomcat.tar.gz.asc \
   && tar -xvf tomcat.tar.gz --strip-components=1 \
   && rm bin/*.bat \
