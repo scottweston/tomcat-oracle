@@ -32,7 +32,7 @@ RUN set -x \
   && gpg --verify tomcat.tar.gz.asc \
   && tar -xvf tomcat.tar.gz --strip-components=1 \
   && rm bin/*.bat \
-  && rm tomcat.tar.gz*
+  && rm tomcat.tar.gz* \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 EXPOSE 8080
