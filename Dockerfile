@@ -6,9 +6,6 @@ ENV PATH $CATALINA_HOME/bin:$PATH
 RUN mkdir -p "$CATALINA_HOME"
 WORKDIR $CATALINA_HOME
 
-# require curl later
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes curl
-
 # see https://www.apache.org/dist/tomcat/tomcat-8/KEYS
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
   05AB33110949707C93A279E3D3EFE6B686867BA6 \
@@ -30,12 +27,13 @@ ENV TOMCAT_VERSION 7.0.75
 ENV TOMCAT_TGZ_URL https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
 
 RUN set -x \
-  && curl -fSL "$TOMCAT_TGZ_URL" -o tomcat.tar.gz \
-  && curl -fSL "$TOMCAT_TGZ_URL.asc" -o tomcat.tar.gz.asc \
+  && wget "$TOMCAT_TGZ_URL" -O tomcat.tar.gz \
+  && wget "$TOMCAT_TGZ_URL.asc" -O tomcat.tar.gz.asc \
   && gpg --verify tomcat.tar.gz.asc \
   && tar -xvf tomcat.tar.gz --strip-components=1 \
   && rm bin/*.bat \
-  && rm tomcat.tar.gz*
+  && rm tomcat.tar.gz* \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 EXPOSE 8080
 
